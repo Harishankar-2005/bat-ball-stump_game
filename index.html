@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cricket</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <h1>Bat Ball and Stump Game!</h1>
+    <button class="choice-button" onclick="play(1)">
+      <img src="bat.png" alt="Bat-image" class="choice-image">
+    </button>
+    <button class="choice-button" onclick="play(2)">
+      <img src="ball.png" alt="Ball-image" class="choice-image">
+    </button>
+    <button class="choice-button" onclick="play(3)">
+      <img src="stump.jpg" alt="stump" class="choice-image">
+    </button><br>
+
+    <div class="score-card">
+    <h1>SCORE BOARD</h1><hr>
+    <h3 id="old-score"></h3><br><hr><br>
+    <h3 id="user-move"></h3>
+    <h3 id="comp-move"></h3>
+    <h3 id="result"></h3>
+    <h3 id="score"></h3>
+    </div>
+
+  <button id="Reset"  onclick="reStart ()">Reset</button>
+
+  <script>
+    let oldScore;
+    function reStart(){
+      oldScore=score.displayScore()
+      localStorage.clear();
+      score.win=0;
+      score.lost=0;
+      score.Tie=0;
+
+      
+      document.querySelector('#score').innerText= score.displayScore();
+      document.querySelector('#old-score').innerText= `Your Old Score: 
+      ${oldScore}`;
+      document.querySelector(`#user-move`).innerText= ``;
+      document.querySelector(`#comp-move`).innerText=`Reset Successfully!`;
+      document.querySelector(`#result`).innerText=``;
+
+    }
+    let score;
+     let scoreStr=localStorage.getItem('score')
+    if (scoreStr!== null){
+      score=JSON.parse(scoreStr)
+    }
+    else{
+    score ={
+      win:0,
+      lost:0,
+      Tie:0,
+    };
+  }
+    score.displayScore= function(){
+      return `Win=${score.win}  Lost=${score.lost}  Tie=${score.Tie}`;
+      };
+
+
+      document.querySelector('#score').innerText = score.displayScore();
+
+
+
+    let user_choice=``;
+    let user_choice_Msg;
+    let comp_choice_Msg;
+    let result;
+    function play(user_choice){
+      if(user_choice==1){
+        user_choice_Msg=`You choose Bat`;
+      }
+      else if(user_choice==2){
+        user_choice_Msg=`You choose Ball`;
+      }
+      else{
+        user_choice_Msg=`You choose Stump`;
+      }
+      let comp_choice=Math.floor(Math.random()*3) + 1;
+      if(comp_choice==1){
+        comp_choice_Msg=`computer choose Bat`;
+      }
+      else if(comp_choice==2){
+        comp_choice_Msg=`computer choose Ball`;
+      }
+      else{
+        comp_choice_Msg=`computer choose Stump`;
+      }
+      if(user_choice==comp_choice) {
+        score.Tie++;
+        result=`Match tie!`;
+      }
+      else if ((user_choice==1 && comp_choice!=3) ||(user_choice==2 && comp_choice!=1) || (user_choice==3 && comp_choice!=2)) {
+        score.win++;
+        result=`User win!`;
+      }
+      else {
+        score.lost++;
+        result=`Computer win!`;
+      }
+
+      localStorage.setItem('score',JSON.stringify(score))
+
+      document.querySelector('#user-move').innerText = user_choice_Msg
+      document.querySelector('#comp-move').innerText = comp_choice_Msg
+      document.querySelector('#result').innerText = result
+      document.querySelector('#score').innerText = score.displayScore()
+
+  }
+  </script>
+</body>
+</html>
